@@ -1,0 +1,31 @@
+{
+    "name": "nacosvel/open-http",
+    "description": "OpenHTTP is a PHP HTTP Client library based on GuzzleHttp.",
+    "keywords": [
+        "OpenHTTP",
+        "GuzzleHttp",
+        "PHP HTTP Client",
+        "curl",
+        "client",
+        "HTTP client",
+        "PSR-7",
+        "PSR-18"
+    ],
+    "authors": [
+        {
+            "name": "jundayw",
+            "email": "jundayw@126.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "php": ">=8.0",
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nacosvel\\OpenHttp\\": "src/"
+        }
+    }
+}
