@@ -14,15 +14,31 @@ interface ChainableInterface
 
     /**
      * @param ClientDecoratorInterface $instance The `ClientDecorator` instance
+     *
      * @return ChainableInterface
      */
     public function setClient(ClientDecoratorInterface $instance): ChainableInterface;
 
     /**
+     * @param string|null $key
+     *
+     * @return array|mixed|null
+     */
+    public function getConfig(string $key = null): mixed;
+
+    /**
+     * @param array $config The `Chainable` config
+     *
+     * @return ChainableInterface
+     */
+    public function setConfig(array $config): ChainableInterface;
+
+    /**
      * Chainable the given $segments with the ChainableInterface instance
      *
-     * @param string $segments The segments or `URI`
+     * @param string $segments  The segments or `URI`
      * @param string $separator The URI separator, default is slash(`/`) character
+     *
      * @return ChainableInterface
      */
     public function chain(string $segments, string $separator = '/'): ChainableInterface;
@@ -35,6 +51,7 @@ interface ChainableInterface
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function get(array $options = []): ResponseInterface;
@@ -47,6 +64,7 @@ interface ChainableInterface
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function head(array $options = []): ResponseInterface;
@@ -59,6 +77,7 @@ interface ChainableInterface
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function put(array $options = []): ResponseInterface;
@@ -71,6 +90,7 @@ interface ChainableInterface
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function post(array $options = []): ResponseInterface;
@@ -83,6 +103,7 @@ interface ChainableInterface
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function patch(array $options = []): ResponseInterface;
@@ -95,6 +116,7 @@ interface ChainableInterface
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function delete(array $options = []): ResponseInterface;
@@ -109,6 +131,7 @@ interface ChainableInterface
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function getAsync(array $options = []): PromiseInterface;
@@ -122,6 +145,7 @@ interface ChainableInterface
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function headAsync(array $options = []): PromiseInterface;
@@ -135,6 +159,7 @@ interface ChainableInterface
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function putAsync(array $options = []): PromiseInterface;
@@ -148,6 +173,7 @@ interface ChainableInterface
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function postAsync(array $options = []): PromiseInterface;
@@ -161,6 +187,7 @@ interface ChainableInterface
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function patchAsync(array $options = []): PromiseInterface;
@@ -174,6 +201,7 @@ interface ChainableInterface
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function deleteAsync(array $options = []): PromiseInterface;

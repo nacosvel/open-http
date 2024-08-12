@@ -15,7 +15,10 @@ final class Builder
 {
     /**
      * Builder Decorator the chainable `GuzzleHttp\Client`
+     *
      * @param array $options
+     * @param array $config
+     *
      * @return ChainableInterface
      * @example
      * ```
@@ -33,9 +36,9 @@ final class Builder
      *      ->wait();
      * ```
      */
-    public static function factory(array $options = []): ChainableInterface
+    public static function factory(array $options = [], array $config = []): ChainableInterface
     {
-        return new Chainable([], new ClientDecorator($options));
+        return new Chainable([], new ClientDecorator($options), $config);
     }
 
     private function __construct()

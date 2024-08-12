@@ -13,7 +13,7 @@ use Nacosvel\OpenHttp\Builder;
 
 $instance = Builder::factory([
     'base_uri' => 'http://httpbin.org/',
-]);
+], []);
 
 // Send an synchronous request.
 $response = $instance->chain('get')->get([
