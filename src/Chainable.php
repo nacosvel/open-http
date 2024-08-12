@@ -43,6 +43,8 @@ class Chainable extends ArrayIterator implements ChainableInterface
     }
 
     /**
+     * Get ths `Chainable` config
+     *
      * @param string|null $key
      *
      * @return array|mixed|null
@@ -59,11 +61,13 @@ class Chainable extends ArrayIterator implements ChainableInterface
     }
 
     /**
+     * Set ths `Chainable` config
+     *
      * @param array $config The `Chainable` config
      *
-     * @return $this
+     * @return ChainableInterface
      */
-    public function setConfig(array $config): Chainable
+    public function setConfig(array $config): ChainableInterface
     {
         $this->config = $config;
         return $this;

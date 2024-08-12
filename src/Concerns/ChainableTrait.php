@@ -13,6 +13,10 @@ trait ChainableTrait
 
     abstract public function setClient(ClientDecoratorInterface $instance): ChainableInterface;
 
+    abstract public function getConfig(string $key = null): mixed;
+
+    abstract public function setConfig(array $config): ChainableInterface;
+
     abstract public function pathname(string $separator = '/'): string;
 
     /**

@@ -20,6 +20,8 @@ interface ChainableInterface
     public function setClient(ClientDecoratorInterface $instance): ChainableInterface;
 
     /**
+     * Get ths `Chainable` config
+     *
      * @param string|null $key
      *
      * @return array|mixed|null
@@ -27,6 +29,8 @@ interface ChainableInterface
     public function getConfig(string $key = null): mixed;
 
     /**
+     * Set ths `Chainable` config
+     *
      * @param array $config The `Chainable` config
      *
      * @return ChainableInterface
