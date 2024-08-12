@@ -23,6 +23,7 @@ trait ChainableTrait
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function get(array $options = []): ResponseInterface
@@ -38,6 +39,7 @@ trait ChainableTrait
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function head(array $options = []): ResponseInterface
@@ -53,6 +55,7 @@ trait ChainableTrait
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function put(array $options = []): ResponseInterface
@@ -68,6 +71,7 @@ trait ChainableTrait
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function post(array $options = []): ResponseInterface
@@ -83,6 +87,7 @@ trait ChainableTrait
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function patch(array $options = []): ResponseInterface
@@ -98,6 +103,7 @@ trait ChainableTrait
      * contain the query string as well.
      *
      * @param array $options Request options to apply.
+     *
      * @return ResponseInterface
      */
     public function delete(array $options = []): ResponseInterface
@@ -115,6 +121,7 @@ trait ChainableTrait
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function getAsync(array $options = []): PromiseInterface
@@ -131,6 +138,7 @@ trait ChainableTrait
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function headAsync(array $options = []): PromiseInterface
@@ -147,6 +155,7 @@ trait ChainableTrait
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function putAsync(array $options = []): PromiseInterface
@@ -163,6 +172,7 @@ trait ChainableTrait
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function postAsync(array $options = []): PromiseInterface
@@ -179,6 +189,7 @@ trait ChainableTrait
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function patchAsync(array $options = []): PromiseInterface
@@ -195,6 +206,7 @@ trait ChainableTrait
      * template and additional variables to use in the URL template expansion.
      *
      * @param array $options Request options to apply.
+     *
      * @return PromiseInterface
      */
     public function deleteAsync(array $options = []): PromiseInterface

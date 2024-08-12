@@ -24,9 +24,10 @@ class ClientDecorator implements ClientDecoratorInterface
      * relative path to append to the base path of the client. The URL can
      * contain the query string as well.
      *
-     * @param string $method HTTP method.
-     * @param string|UriInterface $uri URI object or string.
-     * @param array $options Request options to apply.
+     * @param string              $method  HTTP method.
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     *
      * @return ResponseInterface The `Psr\Http\Message\ResponseInterface` instance
      */
     public function request(string $method, $uri, array $options = []): ResponseInterface
@@ -42,9 +43,10 @@ class ClientDecorator implements ClientDecoratorInterface
      * contain the query string as well. Use an array to provide a URL
      * template and additional variables to use in the URL template expansion.
      *
-     * @param string $method HTTP method
-     * @param string|UriInterface $uri URI object or string.
-     * @param array $options Request options to apply.
+     * @param string              $method  HTTP method
+     * @param string|UriInterface $uri     URI object or string.
+     * @param array               $options Request options to apply.
+     *
      * @return PromiseInterface The `GuzzleHttp\Promise\PromiseInterface` instance
      */
     public function requestAsync(string $method, $uri, array $options = []): PromiseInterface
