@@ -51,6 +51,6 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function requestAsync(string $method, $uri, array $options = []): PromiseInterface
     {
-        return $this->client->requestAsync($method, $method, $options);
+        return $this->client->requestAsync($method, $uri, $options);
     }
 }
