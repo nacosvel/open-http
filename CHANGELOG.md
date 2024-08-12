@@ -2,6 +2,13 @@
 
 Please refer to [CHANGELOG](CHANGELOG.md) guide for upgrading to a major version.
 
+## [v1.2.0-beta](../../compare/v1.1.0-alpha...v1.2.0-beta) - 2024-08-12
+
+version 1.2.0 beta
+* [feat:URI Template](https://github.com/nacosvel/open-http/commit/2fa24c73fd247dd5fbd51effb4b2fa331e1035f0)
+* [chore:guzzlehttp/uri-template](https://github.com/nacosvel/open-http/commit/9020b0aa0e128a4fc4b7114196cf96c15520966c)
+* [fix:bug](https://github.com/nacosvel/open-http/commit/22f34d382dd9ccb9381a9d8c360631e0f9e6611c)
+
 ## [v1.1.0-alpha](../../compare/v1.0.0-SNAPSHOT...v1.1.0-alpha) - 2024-08-12
 
 ### Changed

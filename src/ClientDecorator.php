@@ -3,6 +3,7 @@
 namespace Nacosvel\OpenHttp;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\UriTemplate\UriTemplate;
 use Nacosvel\OpenHttp\Contracts\ClientDecoratorInterface;
@@ -30,6 +31,7 @@ class ClientDecorator implements ClientDecoratorInterface
      * @param array               $options Request options to apply.
      *
      * @return ResponseInterface The `Psr\Http\Message\ResponseInterface` instance
+     * @throws GuzzleException
      */
     public function request(string $method, $uri, array $options = []): ResponseInterface
     {
