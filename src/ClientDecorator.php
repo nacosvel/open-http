@@ -4,6 +4,7 @@ namespace Nacosvel\OpenHttp;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\UriTemplate\UriTemplate;
 use Nacosvel\OpenHttp\Contracts\ClientDecoratorInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -32,7 +33,7 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function request(string $method, $uri, array $options = []): ResponseInterface
     {
-        return $this->client->request($method, $uri, $options);
+        return $this->client->request($method, UriTemplate::expand($uri, $options), $options);
     }
 
     /**
@@ -51,6 +52,6 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function requestAsync(string $method, $uri, array $options = []): PromiseInterface
     {
-        return $this->client->requestAsync($method, $uri, $options);
+        return $this->client->requestAsync($method, UriTemplate::expand($uri, $options), $options);
     }
 }
