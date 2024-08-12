@@ -17,7 +17,9 @@ $instance = Builder::factory([
 
 // Send an synchronous request.
 $response = $instance->chain('get')->get([
-    "nacosvel" => "open-http",
+    'query' => [
+        'nacosvel' => 'open-http',
+    ],
 ]);
 echo $response->getStatusCode();               // 200
 echo $response->getHeaderLine('content-type'); // 'application/json; charset=utf8'
