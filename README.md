@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/nacosvel/open-http?style=flat-square)](https://packagist.org/packages/nacosvel/open-http)
 [![Packagist Version](https://img.shields.io/packagist/v/nacosvel/open-http)](https://packagist.org/packages/nacosvel/open-http)
 [![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/nacosvel/open-http)](https://github.com/nacosvel/open-http)
-[![Packagist License](https://img.shields.io/packagist/l/nacosvel/open-http)](https://github.com/nacosvel/open-http)
+[![Packagist License](https://img.shields.io/github/license/nacosvel/open-http)](https://github.com/nacosvel/open-http)
 
 ```php
 <?php
