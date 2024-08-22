@@ -28,7 +28,5 @@
         "psr-4": {
             "Nacosvel\\OpenHttp\\": "src/"
         }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    }
 }
