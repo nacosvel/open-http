@@ -57,10 +57,15 @@ OpenHTTP is a PHP HTTP Client library based on [Guzzle HTTP Client](http://docs.
 
 ### 重试请求
 
+默认情况下没有启用重试机制。如果你想启用请求的重试，可以使用配置中设置 `retry_max` 来实现。
+
 ```php
 <?php
 
+use GuzzleHttp\Exception\RequestException;
 use Nacosvel\OpenHttp\Builder;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 $instance = Builder::factory([
     'base_uri' => 'http://httpbin.org/',
@@ -74,17 +79,27 @@ $instance = Builder::factory([
         return 2 ** ($retries - 1) * 1000;
     },
 ], []);
+
+$response = $instance->chain('get')->get(['query' => ['foo' => 'bar']]);
 ```
 
-`retry_max`：请求重试次数
+重试请求参数说明：
 
-`retry_status`：请求重试响应状态码策咯，默认：`['5xx']` 表示状态码 500（含）至 599（含），`['50x']` 表示状态码 501（含）至 509（含）
-
-`retry_exceptions`：请求重试异常策咯，默认：`[RequestException::class]`
-
-`retry_decider`：提供的“决策者”函数：`function (array $options, int $retries, RequestInterface $request, ResponseInterface $response = null, $exception = null): bool`
-
-`retry_delay`：提供的“延迟”函数：`function (array $options, int $retries): int`
++ 请求重试次数（必填）：`retry_max`
++ 请求重试响应状态码策咯（可选）：`retry_status`
+    + 默认：`['5xx']` 表示状态码 500（含）至 599（含），`['50x']` 表示状态码 501（含）至 509（含）
++ 请求重试异常策咯（可选）：`retry_exceptions`
+    + 默认：`[RequestException::class]`
++ 提供的“决策者”函数（可选）：`retry_decider`
+    + 函数指定了什么时候应该重试请求，例如当请求返回 5xx 响应码时或在连接异常时进行重试。
+        ```php
+        function retry_decider(array $options, int $retries, RequestInterface $request, ResponseInterface $response = null, $exception = null): bool;
+        ```
++ 提供的“延迟”函数（可选）：`retry_delay`
+    + 延时函数的主要功能是控制每次重试请求之间的等待时间，从而避免请求被过于频繁地发送，尤其是在处理失败或错误的情况下。
+        ```php
+        function retry_delay(array $options, int $retries): int;
+        ```
 
 ### 同步请求
 

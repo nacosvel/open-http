@@ -41,8 +41,8 @@ class RetryMiddleware
                 return call_user_func($options['retry_decider'], $options, $retries, $request, $response, $exception);
             }
 
-            if ($retries < $options['retry_max']) {
-                return true;
+            if ($retries >= $options['retry_max']) {
+                return false;
             }
 
             $matches = function (string $pattern, string $subject): bool {
