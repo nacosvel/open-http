@@ -2,11 +2,16 @@
 
 namespace Nacosvel\OpenHttp\Contracts;
 
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 
 interface ClientDecoratorInterface
 {
+    public function getRequestClient(): ClientInterface;
+
+    public function setRequestClient(ClientInterface $client): static;
+
     /**
      * Get a client configuration option.
      *

@@ -46,6 +46,7 @@ composer require nacosvel/open-http
 
 OpenHTTP is a PHP HTTP Client library based on [Guzzle HTTP Client](http://docs.guzzlephp.org/).
 
+* 支持 [重试](#重试请求) 发送请求
 * 支持 [同步](#同步请求) 或 [异步](#异步请求) 发送请求
 * [链式实现的 URI Template](#链式-uri-template)
 * [自定义扩展](#自定义扩展)
@@ -53,6 +54,37 @@ OpenHTTP is a PHP HTTP Client library based on [Guzzle HTTP Client](http://docs.
 * 推荐使用目前处于 [Active Support](https://www.php.net/supported-versions.php) 阶段的 PHP 8 和 Guzzle 7。
 
 ## 文档
+
+### 重试请求
+
+```php
+<?php
+
+use Nacosvel\OpenHttp\Builder;
+
+$instance = Builder::factory([
+    'base_uri' => 'http://httpbin.org/',
+    'retry_max'        => 3,
+    'retry_status'     => ['5xx'],
+    'retry_exceptions' => [RequestException::class],
+    'retry_decider'    => function (array $options, int $retries, RequestInterface $request, ResponseInterface $response = null, $exception = null): bool {
+        return $retries < $options['retry_max'];
+    },
+    'retry_delay'      => function (array $options, int $retries): int {
+        return 2 ** ($retries - 1) * 1000;
+    },
+], []);
+```
+
+`retry_max`：请求重试次数
+
+`retry_status`：请求重试响应状态码策咯，默认：`['5xx']` 表示状态码 500（含）至 599（含），`['50x']` 表示状态码 501（含）至 509（含）
+
+`retry_exceptions`：请求重试异常策咯，默认：`[RequestException::class]`
+
+`retry_decider`：提供的“决策者”函数：`function (array $options, int $retries, RequestInterface $request, ResponseInterface $response = null, $exception = null): bool`
+
+`retry_delay`：提供的“延迟”函数：`function (array $options, int $retries): int`
 
 ### 同步请求
 

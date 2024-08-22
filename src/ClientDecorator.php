@@ -3,19 +3,43 @@
 namespace Nacosvel\OpenHttp;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\UriTemplate\UriTemplate;
 use Nacosvel\OpenHttp\Contracts\ClientDecoratorInterface;
+use Nacosvel\OpenHttp\Middlewares\RetryMiddleware;
 use Psr\Http\Message\ResponseInterface;
 
 class ClientDecorator implements ClientDecoratorInterface
 {
-    protected Client $client;
+    protected ClientInterface $client;
 
     public function __construct(array $options = [])
     {
-        $this->client = new Client($options);
+        $this->setRequestClient(new Client($options));
+    }
+
+    /**
+     * @return ClientInterface
+     */
+    public function getRequestClient(): ClientInterface
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param ClientInterface $client
+     *
+     * @return static
+     */
+    public function setRequestClient(ClientInterface $client): static
+    {
+        if (false === is_null($client->getConfig('retry_max'))) {
+            $client->getConfig('handler')->before('http_errors', new RetryMiddleware(), 'retry_request');
+        }
+        $this->client = $client;
+        return $this;
     }
 
     /**
@@ -31,7 +55,7 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function getConfig(?string $option = null): mixed
     {
-        return $this->client->getConfig($option);
+        return $this->getRequestClient()->getConfig($option);
     }
 
     /**
@@ -50,7 +74,7 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function request(string $method, string $uri = '', array $options = []): ResponseInterface
     {
-        return $this->client->request($method, UriTemplate::expand($uri, $options), $options);
+        return $this->getRequestClient()->request($method, UriTemplate::expand($uri, $options), $options);
     }
 
     /**
@@ -69,6 +93,6 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function requestAsync(string $method, string $uri = '', array $options = []): PromiseInterface
     {
-        return $this->client->requestAsync($method, UriTemplate::expand($uri, $options), $options);
+        return $this->getRequestClient()->requestAsync($method, UriTemplate::expand($uri, $options), $options);
     }
 }
