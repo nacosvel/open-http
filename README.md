@@ -92,11 +92,13 @@ $response = $instance->chain('get')->get(['query' => ['foo' => 'bar']]);
 
 + 请求重试次数（必填）：`retry_max`
 + 请求重试响应状态码策咯（可选）：`retry_status`
-    + 默认：`['5xx']` 表示状态码 500（含）至 599（含），`['50x']` 表示状态码 501（含）至 509（含）
+  > 默认：`['5xx']` 表示状态码 500（含）至 599（含）
 + 请求重试异常策咯（可选）：`retry_exceptions`
-    + 默认：`[RequestException::class]`
+  > 默认：`[RequestException::class]`
 + 提供的“决策者”函数（可选）：`retry_decider`
+  > 默认：`retry_status` 或 `retry_exceptions` 时重试请求
 + 提供的“延迟”函数（可选）：`retry_delay`
+  > 默认：`2 ** ($retries - 1) * 1000`
 
 函数说明：
 
