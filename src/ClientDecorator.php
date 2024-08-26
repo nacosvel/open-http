@@ -37,8 +37,8 @@ class ClientDecorator implements ClientDecoratorInterface
     {
         if (false === is_null($client->getConfig('retry_max'))) {
             $handler = $client->getConfig('handler');
-            $handler->remove('nacosvel.open_http.retry_request');
-            $handler->before('http_errors', new RetryMiddleware(), 'nacosvel.open_http.retry_request');
+            $handler->remove('nacosvel.open_http.retry_request_middleware');
+            $handler->push(new RetryMiddleware(), 'nacosvel.open_http.retry_request_middleware');
         }
         $this->client = $client;
         return $this;
