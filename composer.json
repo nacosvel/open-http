@@ -11,22 +11,29 @@
         "PSR-7",
         "PSR-18"
     ],
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "jundayw",
             "email": "jundayw@126.com"
         }
     ],
-    "type": "library",
     "require": {
         "php": ">=8.0",
         "guzzlehttp/guzzle": "^7.2.0",
         "guzzlehttp/uri-template": "^1.0"
     },
-    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Nacosvel\\OpenHttp\\": "src/"
         }
-    }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
