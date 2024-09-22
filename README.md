@@ -36,7 +36,7 @@ $promise = $instance
 
 ## 安装
 
-推荐使用 PHP 包管理工具 [Composer](https://getcomposer.org/) 安装 SDK：
+推荐使用 PHP 包管理工具 [Composer](https://getcomposer.org/) 安装：
 
 ```bash
 composer require nacosvel/open-http
@@ -367,4 +367,4 @@ $instance->v3->certificates
 
 ## License
 
-Guzzle is made available under the MIT License (MIT). Please see [License File](LICENSE) for more information.
+Nacosvel OpenHTTP is made available under the MIT License (MIT). Please see [License File](LICENSE) for more information.
