@@ -5,19 +5,19 @@ namespace Nacosvel\OpenHttp;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\UriTemplate\UriTemplate;
 use Nacosvel\OpenHttp\Contracts\ClientDecoratorInterface;
-use Nacosvel\OpenHttp\Middlewares\RetryMiddleware;
 use Psr\Http\Message\ResponseInterface;
 
 class ClientDecorator implements ClientDecoratorInterface
 {
-    protected ClientInterface $client;
+    protected ?ClientInterface $client = null;
 
-    public function __construct(array $options = [])
+    public function __construct(private array $options = [])
     {
-        $this->setRequestClient(new Client($options));
+        //
     }
 
     /**
@@ -25,6 +25,10 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function getRequestClient(): ClientInterface
     {
+        if (is_null($this->client)) {
+            $this->client = new Client($this->options);
+        }
+
         return $this->client;
     }
 
@@ -35,11 +39,6 @@ class ClientDecorator implements ClientDecoratorInterface
      */
     public function setRequestClient(ClientInterface $client): static
     {
-        if (false === is_null($client->getConfig('retry_max'))) {
-            $handler = $client->getConfig('handler');
-            $handler->remove('nacosvel.open_http.retry_request_middleware');
-            $handler->push(new RetryMiddleware(), 'nacosvel.open_http.retry_request_middleware');
-        }
         $this->client = $client;
         return $this;
     }
@@ -55,9 +54,24 @@ class ClientDecorator implements ClientDecoratorInterface
      *
      * @return mixed
      */
-    public function getConfig(?string $option = null): mixed
+    public function getRequestClientConfig(?string $option = null): mixed
     {
         return $this->getRequestClient()->getConfig($option);
+    }
+
+    /**
+     * HTTP handler function to use with the stack.
+     *
+     * The returned handler will wrap the provided handler or use the most
+     * appropriate default handler for your system. The returned HandlerStack has
+     * support for cookies, redirects, HTTP error exceptions, and preparing a body
+     * before sending.
+     *
+     * @return HandlerStack
+     */
+    public function getRequestClientHandler(): HandlerStack
+    {
+        return $this->getRequestClientConfig('handler');
     }
 
     /**

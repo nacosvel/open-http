@@ -40,12 +40,11 @@ interface ChainableInterface
     /**
      * Chainable the given $segments with the ChainableInterface instance
      *
-     * @param string $segments  The segments or `URI`
-     * @param string $separator The URI separator, default is slash(`/`) character
+     * @param string $segments The segments or `URI`
      *
      * @return ChainableInterface
      */
-    public function chain(string $segments, string $separator = '/'): ChainableInterface;
+    public function chain(string $segments): ChainableInterface;
 
     /**
      * Create and send an HTTP GET request.
@@ -238,5 +237,4 @@ interface ChainableInterface
      * @return PromiseInterface
      */
     public function requestAsync(string $method, array $options = []): PromiseInterface;
-
 }

@@ -252,5 +252,4 @@ trait ChainableTrait
     {
         return $this->getClient()->requestAsync($method, $this->pathname(), $options);
     }
-
 }

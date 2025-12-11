@@ -2,11 +2,7 @@
 
 namespace Nacosvel\OpenHttp;
 
-use ArrayIterator;
-use Exception;
-use GuzzleHttp\Promise\PromiseInterface;
 use Nacosvel\OpenHttp\Contracts\ChainableInterface;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Chainable the client for sending HTTP requests.
@@ -45,5 +41,4 @@ final class Builder
     {
 
     }
-
 }

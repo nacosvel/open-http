@@ -12,8 +12,8 @@
 use Nacosvel\OpenHttp\Builder;
 
 $instance = Builder::factory([
-    'base_uri' => 'http://httpbin.org/',
-], []);
+    'base_uri' => 'https://httpspot.dev/',
+]);
 
 // Send an synchronous request.
 $response = $instance->chain('get')->get([
@@ -28,10 +28,12 @@ echo $response->getBody();                     // '{"args":{"nacosvel":"open-htt
 // Send an asynchronous request.
 $promise = $instance
     ->chain('get')
-    ->getAsync()->then(function ($response) {
-        echo 'I completed! ' . $response->getBody();
+    ->getAsync()
+    ->then(function ($response) {
+        return $response->getBody();
     })
     ->wait();
+echo $promise->getContents();
 ```
 
 ## 安装
@@ -55,65 +57,6 @@ OpenHTTP is a PHP HTTP Client library based on [Guzzle HTTP Client](http://docs.
 
 ## 文档
 
-### 重试请求
-
-默认情况下没有启用重试机制。如果你想启用请求的重试，可以使用配置中设置 `retry_max` 来实现。
-
-```php
-<?php
-
-use GuzzleHttp\Exception\RequestException;
-use Nacosvel\OpenHttp\Builder;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
-// 提供的“决策者”函数
-$retry_decider = function (array $options, int $retries, RequestInterface $request, ResponseInterface $response = null, $exception = null): bool {
-    return $retries < $options['retry_max'];
-};
-// 提供的“延迟”函数
-$retry_delay = function (array $options, int $retries): int {
-    return 2 ** ($retries - 1) * 1000;
-};
-
-$instance = Builder::factory([
-    'base_uri'         => 'http://httpbin.org/',
-    'retry_max'        => 3,
-    'retry_status'     => ['5xx'],
-    'retry_exceptions' => [RequestException::class],
-    'retry_decider'    => $retry_decider,
-    'retry_delay'      => $retry_delay,
-], []);
-
-$response = $instance->chain('get')->get(['query' => ['foo' => 'bar']]);
-```
-
-重试请求参数说明：
-
-+ 请求重试次数（必填）：`retry_max`
-+ 请求重试响应状态码策咯（可选）：`retry_status`
-  > 默认：`['5xx']` 表示状态码 500（含）至 599（含）
-+ 请求重试异常策咯（可选）：`retry_exceptions`
-  > 默认：`[RequestException::class]`
-+ 提供的“决策者”函数（可选）：`retry_decider`
-  > 默认：`retry_status` 或 `retry_exceptions` 时重试请求
-+ 提供的“延迟”函数（可选）：`retry_delay`
-  > 默认：`2 ** ($retries - 1) * 1000`
-
-函数说明：
-
-```php
-function retry_decider(array $options, int $retries, RequestInterface $request, ResponseInterface $response = null, $exception = null): bool;
-```
-
-决策函数指定了什么时候应该重试请求，例如当请求返回 5xx 响应码时或在连接异常时进行重试。
-
-```php
-function retry_delay(array $options, int $retries): int;
-```
-
-延时函数的主要功能是控制每次重试请求之间的等待时间，从而避免请求被过于频繁地发送，尤其是在处理失败或错误的情况下。
-
 ### 同步请求
 
 使用客户端提供的 `get`、`head`、`put`、`post`、`patch` 或 `delete` 方法发送同步请求。
@@ -122,22 +65,23 @@ function retry_delay(array $options, int $retries): int;
 <?php
 
 try {
-    $resp = $instance
-        ->chain('v3/pay/transactions/native')
-        ->post(['json' => [
-            'mchid'        => '1900006XXX',
-            'out_trade_no' => 'native12177525012014070332333',
-            'appid'        => 'wxdace645e0bc2cXXX',
-            'description'  => 'Image形象店-深圳腾大-QQ公仔',
-            'notify_url'   => 'https://weixin.qq.com/',
-            'amount'       => [
-                'total'    => 1,
-                'currency' => 'CNY',
-            ],
-        ]]);
+    $response = $instance
+        ->chain('post')
+        ->post([
+            'json' => [
+                'mchid'        => '1900006XXX',
+                'out_trade_no' => 'native12177525012014070332333',
+                'appid'        => 'wxdace645e0bc2cXXX',
+                'description'  => 'Image形象店-深圳腾大-QQ公仔',
+                'notify_url'   => 'https://weixin.qq.com/',
+                'amount'       => [
+                    'total'    => 1,
+                    'currency' => 'CNY',
+                ],
+            ]]);
 
-    echo $resp->getStatusCode(), PHP_EOL;
-    echo $resp->getBody(), PHP_EOL;
+    echo $response->getStatusCode(), PHP_EOL;
+    echo $response->getBody(), PHP_EOL;
 } catch (\Exception $e) {
     // 进行错误处理
     echo $e->getMessage(), PHP_EOL;
@@ -161,7 +105,7 @@ try {
 <?php
 
 $promise = $instance
-    ->chain('v3/refund/domestic/refunds')
+    ->chain('post')
     ->postAsync([
         'json' => [
             'transaction_id' => '1217752501201407033233368018',
@@ -286,65 +230,29 @@ $promise = $instance
 ```php
 <?php
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-// 假设集中管理服务器接入点为内网`http://192.168.169.170:8080/`地址，并提供两个URI供签名及验签
-// - `/wechatpay-merchant-request-signature` 为请求签名
-// - `/wechatpay-response-merchant-validation` 为响应验签
-$client = new Client(['base_uri' => 'http://192.168.169.170:8080/']);
+$handler = $instance->getClient()->getRequestClientHandler();
+$auth    = fn() => 'Authorization';
+$verify  = fn($response) => true;
 
-// 请求参数签名，返回字符串形如`\WeChatPay\Formatter::authorization`返回的字符串
-$remoteSigner = function (RequestInterface $request) use ($client, $merchantId): string {
-    return (string)$client->post('/wechatpay-merchant-request-signature', ['json' => [
-        'mchid' => $merchantId,
-        'verb'  => $request->getMethod(),
-        'uri'   => $request->getRequestTarget(),
-        'body'  => (string)$request->getBody(),
-    ]])->getBody();
-};
-
-// 返回结果验签，返回可以是4xx,5xx，与远程验签应用约定返回字符串'OK'为验签通过
-$remoteVerifier = function (ResponseInterface $response) use ($client, $merchantId): string {
-    $nonce     = $response->getHeader('Wechatpay-Nonce');
-    $serial    = $response->getHeader('Wechatpay-Serial');
-    $signature = $response->getHeader('Wechatpay-Signature');
-    $timestamp = $response->getHeader('Wechatpay-Timestamp');
-    return (string)$client->post('/wechatpay-response-merchant-validation', ['json' => [
-        'mchid'     => $merchantId,
-        'nonce'     => $nonce,
-        'serial'    => $serial,
-        'signature' => $signature,
-        'timestamp' => $timestamp,
-        'body'      => (string)$response->getBody(),
-    ]])->getBody();
-};
-
-$stack = $instance->getClient()->getConfig('handler');
-
-// 卸载SDK内置签名中间件
-$stack->remove('signer');
-
-// 注册内网远程请求签名中间件
-$stack->before('prepare_body', Middleware::mapRequest(
-    static function (RequestInterface $request) use ($remoteSigner): RequestInterface {
-        return $request->withHeader('Authorization', $remoteSigner($request));
+// 注册请求认证中间件
+$handler->before('prepare_body', Middleware::mapRequest(
+    static function (RequestInterface $request) use ($auth): RequestInterface {
+        return $request->withHeader('Authorization', $auth($request));
     }
-), 'signer');
+), 'auth');
 
-// 卸载SDK内置验签中间件
-$stack->remove('verifier');
-
-// 注册内网远程请求验签中间件
-$stack->before('http_errors', static function (callable $handler) use ($remoteVerifier): callable {
-    return static function (RequestInterface $request, array $options = []) use ($remoteVerifier, $handler) {
+// 注册请求验签中间件
+$handler->before('http_errors', static function (callable $handler) use ($verify): callable {
+    return static function (RequestInterface $request, array $options = []) use ($verify, $handler) {
         return $handler($request, $options)->then(
-            static function (ResponseInterface $response) use ($remoteVerifier, $request): ResponseInterface {
+            static function (ResponseInterface $response) use ($verify, $request): ResponseInterface {
                 try {
-                    if ($remoteVerifier($response) === 'OK') { // 远程验签约定，返回字符串`OK`作为验签通过
+                    if ($verify($response)) {
                         throw new RequestException('签名验签失败', $request, $response, $exception ?? null);
                     }
                 } catch (\Throwable $exception) {
@@ -354,15 +262,15 @@ $stack->before('http_errors', static function (callable $handler) use ($remoteVe
             }
         );
     };
-}, 'verifier');
+}, 'verify');
 
-// 链式/同步/异步请求APIv3即可，例如:
-$instance->v3->certificates
+$response = $instance->anything->certificates
     ->getAsync()
     ->then(static function ($res) {
         return $res->getBody();
     })
     ->wait();
+var_dump($response->getContents());
 ```
 
 ## License

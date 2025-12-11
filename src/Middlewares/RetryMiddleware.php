@@ -88,5 +88,4 @@ class RetryMiddleware
             return 2 ** ($retries - 1) * 1000;
         };
     }
-
 }

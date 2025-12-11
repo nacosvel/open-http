@@ -80,7 +80,7 @@ class Chainable extends ArrayIterator implements ChainableInterface
      */
     protected function allChains(): array
     {
-        return array_filter($this->getArrayCopy(), static fn($value) => !($value instanceof ChainableInterface || $value instanceof ClientDecoratorInterface));
+        return array_filter($this->getArrayCopy(), static fn($value) => !($value instanceof ChainableInterface));
     }
 
     /**
@@ -107,12 +107,14 @@ class Chainable extends ArrayIterator implements ChainableInterface
      *
      * @param mixed $key The offset to get the value from.
      *
-     * @return ChainableInterface|ClientDecoratorInterface
+     * @return ChainableInterface
      */
-    public function offsetGet(mixed $key): ChainableInterface|ClientDecoratorInterface
+    public function offsetGet(mixed $key): ChainableInterface
     {
         if (!$this->offsetExists($key)) {
-            $this->offsetSet($key, new self([...$this->allChains(), $this->normalize($key)], $this->getClient(), $this->getConfig()));
+            $chains   = $this->allChains();
+            $chains[] = $this->normalize($key);
+            $this->offsetSet($key, new self($chains, $this->getClient(), $this->getConfig()));
         }
 
         return parent::offsetGet($key);
@@ -121,14 +123,13 @@ class Chainable extends ArrayIterator implements ChainableInterface
     /**
      * Chainable the given $segments with the ChainableInterface instance
      *
-     * @param string $segments  The segments or `URI`
-     * @param string $separator The URI separator, default is slash(`/`) character
+     * @param string $segments The segments or `URI`
      *
      * @return ChainableInterface
      */
-    public function chain(string $segments, string $separator = '/'): ChainableInterface
+    public function chain(string $segments): ChainableInterface
     {
-        return array_reduce(explode($separator, $segments), static fn($carry, $item) => $carry->offsetGet($item), $this);
+        return $this->offsetGet($segments);
     }
 
     /**
@@ -142,5 +143,4 @@ class Chainable extends ArrayIterator implements ChainableInterface
     {
         return implode($separator, $this->allChains());
     }
-
 }
