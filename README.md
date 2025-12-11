@@ -48,7 +48,6 @@ composer require nacosvel/open-http
 
 OpenHTTP is a PHP HTTP Client library based on [Guzzle HTTP Client](http://docs.guzzlephp.org/).
 
-* 支持 [重试](#重试请求) 发送请求
 * 支持 [同步](#同步请求) 或 [异步](#异步请求) 发送请求
 * [链式实现的 URI Template](#链式-uri-template)
 * [自定义扩展](#自定义扩展)
@@ -167,12 +166,10 @@ URL 参数。
 + 包含连字号(-)的 segment
     + 使用驼峰 camelCase 风格书写。例如 `merchant-service` 可写成 `merchantService`
     + 使用 `{'foo-bar'}` 方式书写。例如 `{'merchant-service'}`
-+ URL 中的 Path 变量应使用这种写法，避免自行组装或者使用 `chain()`，导致大小写处理错误
++ Path 变量：URL 中的 Path 变量应使用这种写法，避免自行组装，导致大小写处理错误
     + **推荐使用** `_variable_name_` 方式书写，支持 IDE 提示。例如 `v3->pay->transactions->id->_transaction_id_`。
     + 使用 `{'{variable_name}'}` 方式书写。例如 `v3->pay->transactions->id->{'{transaction_id}'}`
-+ 请求的 `HTTP METHOD` 作为链式最后的执行方法。例如 `v3->pay->transactions->native->post([ ... ])`
-+ Path 变量的值，以同名参数传入执行方法
-+ Query 参数，以名为 `query` 的参数传入执行方法
+    + **使用 `chain` 方法** `{transaction_id}` 方式书写。例如：`chain('v3/pay/transactions/id/{transaction_id}')`
 
 以[查询订单](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_4_2.shtml) `GET` 方法为例：
 
@@ -181,10 +178,11 @@ URL 参数。
 
 $promise = $instance
     ->v3->pay->transactions->id->_transaction_id_
+    // v3->pay->transactions->id->{'{transaction_id}'}
     ->getAsync([
         // Query 参数
         'query'          => ['mchid' => '1230000109'],
-        // 变量名 => 变量值
+        // Path 变量的值，以同名参数传入执行方法
         'transaction_id' => '1217752501201407033233368018',
     ]);
 ```
@@ -195,11 +193,11 @@ $promise = $instance
 <?php
 
 $promise = $instance
-    ->v3->pay->transactions->outTradeNo->_out_trade_no_->close
+    ->chain('v3/pay/transactions/outTradeNo/{out_trade_no}/close')
     ->postAsync([
         // 请求消息
-        'json'         => ['mchid' => '1230000109'],
-        // 变量名 => 变量值
+        'form_params'  => ['mchid' => '1230000109'],
+        // Path 变量的值，以同名参数传入执行方法
         'out_trade_no' => '1217752501201407033233368018',
     ]);
 ```
